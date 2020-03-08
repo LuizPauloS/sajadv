@@ -1,6 +1,7 @@
 package br.com.softplan.sajadv.entity;
 
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.hibernate.validator.constraints.br.CPF;
 
 import javax.persistence.Column;
@@ -11,6 +12,7 @@ import java.time.LocalDateTime;
 
 @Data
 @Entity
+@NoArgsConstructor
 public class Pessoa extends BaseEntity {
 
     @Column(nullable = false, length = 150)
@@ -24,8 +26,19 @@ public class Pessoa extends BaseEntity {
     @Column(nullable = false, length = 400)
     private String email;
 
+    @Column(name = "data_nascimento")
+    private LocalDateTime dataNascimento;
+
     @Lob
     private byte[] foto;
 
-    private LocalDateTime dataNascimento;
+    public Pessoa(Integer id, String nome, String cpf, String email,
+                  LocalDateTime dataNascimento, byte[] foto) {
+        super(id);
+        this.nome = nome;
+        this.cpf = cpf;
+        this.email = email;
+        this.dataNascimento = dataNascimento;
+        this.foto = foto;
+    }
 }

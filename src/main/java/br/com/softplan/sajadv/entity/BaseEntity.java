@@ -1,7 +1,6 @@
 package br.com.softplan.sajadv.entity;
 
-import lombok.Data;
-
+import lombok.*;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -10,6 +9,9 @@ import java.io.Serializable;
 
 @Data
 @MappedSuperclass
+@EqualsAndHashCode
+@NoArgsConstructor
+@AllArgsConstructor
 public abstract class BaseEntity implements Serializable {
 
     private static final long serialVersionUID = 1L;
