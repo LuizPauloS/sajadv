@@ -3,6 +3,7 @@ package br.com.softplan.sajadv.service;
 import br.com.softplan.sajadv.exception.ApiValidationException;
 import javax.validation.*;
 import java.util.*;
+import java.util.stream.Collectors;
 
 public class ValidatorService {
 
@@ -14,11 +15,7 @@ public class ValidatorService {
         Set<ConstraintViolation<T>> violations = validator.validate(entidade);
 
         if (!violations.isEmpty()) {
-            List<String> errors = new ArrayList<>();
-            for (ConstraintViolation error: violations) {
-                String msgError = error.getMessage();
-                errors.add(msgError);
-            }
+            List<String> errors = violations.stream().map(ConstraintViolation::getMessage).collect(Collectors.toList());
             throw new ApiValidationException("Campos inválidos", errors);
         }
         return true;
