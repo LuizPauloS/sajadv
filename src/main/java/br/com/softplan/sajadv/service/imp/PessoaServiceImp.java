@@ -2,16 +2,17 @@ package br.com.softplan.sajadv.service.imp;
 
 import br.com.softplan.sajadv.entity.Pessoa;
 import br.com.softplan.sajadv.exception.ApiValidationException;
-import br.com.softplan.sajadv.exception.PessoaExcepion;
+import br.com.softplan.sajadv.exception.BadRequestExcepion;
+import br.com.softplan.sajadv.exception.NotModifiedException;
 import br.com.softplan.sajadv.repository.PessoaRepository;
 import br.com.softplan.sajadv.service.IPessoaService;
+import br.com.softplan.sajadv.service.ValidatorService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
 import java.util.Optional;
-
-import static br.com.softplan.sajadv.service.ValidatorService.*;
 
 @Service
 public class PessoaServiceImp implements IPessoaService {
@@ -20,12 +21,40 @@ public class PessoaServiceImp implements IPessoaService {
     private PessoaRepository pessoaRepository;
 
     @Override
+    public Page<Pessoa> findAll(Pageable pageable) {
+        return this.pessoaRepository.findAll(pageable);
+    }
+
+    @Override
+    public Optional<Pessoa> findById(Integer id) {
+        if (id != null) {
+            return this.pessoaRepository.findById(id);
+        }
+        throw new BadRequestExcepion("Ocorreu um erro ao buscar o cadastro de pessoa pelo id. " +
+                "Verifique os dados e tente novamente.");
+    }
+
+    @Override
+    public void delete(Integer id) {
+        if (id != null) {
+            this.pessoaRepository.findById(id).ifPresent(pessoa -> {
+                if (pessoa.isAtivo()) {
+                    pessoa.setAtivo(false);
+                    pessoaRepository.save(pessoa);
+                    return;
+                }
+                throw new NotModifiedException("Registro já deletado da base de dados!");
+            });
+        }
+    }
+
+    @Override
     public Pessoa save(Pessoa pessoa) throws ApiValidationException {
         if (pessoa != null) {
-            validarAtributosEntidade(pessoa);
+            ValidatorService.validarAtributosEntidade(pessoa);
             return this.pessoaRepository.save(pessoa);
         }
-        throw new PessoaExcepion("Ocorreu um erro ao registrar um cadastro de pessoa. " +
+        throw new BadRequestExcepion("Ocorreu um erro ao registrar um cadastro de pessoa. " +
                 "Verifique os dados e tente novamente.");
     }
 
@@ -34,7 +63,7 @@ public class PessoaServiceImp implements IPessoaService {
         Optional<Pessoa> optionalPessoa;
         if (pessoa != null && id != null) {
             optionalPessoa = this.pessoaRepository.findById(id);
-            validarAtributosEntidade(optionalPessoa.get());
+            ValidatorService.validarAtributosEntidade(optionalPessoa.get());
             optionalPessoa.ifPresent(pessoaAtualizada -> {
                 pessoaAtualizada.setCpf(pessoaAtualizada.getCpf() == null ? pessoa.getCpf() :
                         pessoaAtualizada.getCpf());
@@ -50,17 +79,7 @@ public class PessoaServiceImp implements IPessoaService {
             });
             return optionalPessoa.get();
         }
-        throw new PessoaExcepion("Ocorreu um erro ao atualizar dados referentes a pessoa. " +
+        throw new BadRequestExcepion("Ocorreu um erro ao atualizar dados referentes a pessoa. " +
                 "Verifique se os dados e tente novamente.");
-    }
-
-    @Override
-    public List<Pessoa> findAll() {
-        return null;
-    }
-
-    @Override
-    public Pessoa findById(Integer id) {
-        return null;
     }
 }

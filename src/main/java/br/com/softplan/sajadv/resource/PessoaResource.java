@@ -5,13 +5,9 @@ import br.com.softplan.sajadv.exception.ApiValidationException;
 import br.com.softplan.sajadv.service.imp.PessoaServiceImp;
 import br.com.softplan.sajadv.wrapper.ResponseValidationMessage;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
-
-import javax.websocket.server.PathParam;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/pessoas")
@@ -19,6 +15,16 @@ public class PessoaResource {
 
     @Autowired
     private PessoaServiceImp pessoaServiceImp;
+
+    @RequestMapping(method = RequestMethod.GET)
+    public ResponseEntity<?> findAll(Pageable pageable) {
+        return ResponseEntity.ok(pessoaServiceImp.findAll(pageable));
+    }
+
+    @RequestMapping(method = RequestMethod.GET, value = "/{id}")
+    public ResponseEntity<?> findById(@PathVariable("id") Integer id) {
+        return ResponseEntity.ok(pessoaServiceImp.findById(id));
+    }
 
     @RequestMapping(method = RequestMethod.POST)
     public ResponseEntity<?> save(@RequestBody Pessoa pessoa) {
@@ -31,7 +37,7 @@ public class PessoaResource {
     }
 
     @RequestMapping(method = RequestMethod.PUT, value = "/{id}")
-    public ResponseEntity<?> update(@RequestBody Pessoa pessoa, @PathParam("id") Integer id) {
+    public ResponseEntity<?> update(@RequestBody Pessoa pessoa, @PathVariable("id") Integer id) {
         try {
             return ResponseEntity.ok(pessoaServiceImp.update(id, pessoa));
         } catch (ApiValidationException e) {
@@ -39,4 +45,11 @@ public class PessoaResource {
                     .mensagem(e.getMessage()).validacoes(e.getMessages()).build());
         }
     }
+
+    @RequestMapping(method = RequestMethod.DELETE, value = "/{id}")
+    public ResponseEntity<?> delete(@PathVariable("id") Integer id) {
+        this.pessoaServiceImp.delete(id);
+        return ResponseEntity.ok("Registro de id" + id + "deletado com sucesso.");
+    }
+
 }

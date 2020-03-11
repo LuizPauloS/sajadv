@@ -2,21 +2,28 @@ package br.com.softplan.sajadv.service;
 
 import br.com.softplan.sajadv.entity.Pessoa;
 import br.com.softplan.sajadv.exception.ApiValidationException;
+import br.com.softplan.sajadv.exception.BadRequestExcepion;
 import br.com.softplan.sajadv.repository.PessoaRepository;
 import br.com.softplan.sajadv.service.imp.PessoaServiceImp;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.Mockito;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import java.time.LocalDate;
+import java.util.List;
 import java.util.Optional;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.mockito.Mockito.*;
+import static br.com.softplan.sajadv.util.MockBuildUtils.buildListPessoasTest;
+import static br.com.softplan.sajadv.util.MockBuildUtils.buildPessoaTest;
+import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.when;
 
 @RunWith(SpringRunner.class)
 public class PessoaServiceTest {
@@ -27,10 +34,16 @@ public class PessoaServiceTest {
     @InjectMocks
     private PessoaServiceImp pessoaServiceImp;
 
+    private Pessoa pessoa;
+
+    @Before
+    public void init() {
+        this.pessoa = buildPessoaTest(1,"Luiz Silva", "157.091.860-07",
+                "luiz@teste.com", LocalDate.of(1980, 12, 2), null, true);
+    }
+
     @Test
     public void deveCadastrarPessoaComDadosValidos() throws ApiValidationException {
-        Pessoa pessoa = Pessoa.builder().nome("Luiz Silva").cpf("157.091.860-07").email("luiz@teste.com")
-                .dataNascimento(LocalDate.of(1980, 12, 2)).foto(null).build();
         when(this.pessoaRepository.save(pessoa)).thenReturn(pessoa);
 
         Pessoa pessoaAdicionada = this.pessoaServiceImp.save(pessoa);
@@ -51,8 +64,8 @@ public class PessoaServiceTest {
 
     @Test(expected = ApiValidationException.class)
     public void naoDeveCadastrarPessoaComEmailInvalido() throws ApiValidationException {
-        Pessoa pessoaEmailInvalido = Pessoa.builder().nome("João Carvalho").cpf("14964166007").email("joao.teste.com")
-                .dataNascimento(LocalDate.of(1988, 1, 25)).foto(null).build();
+        Pessoa pessoaEmailInvalido = buildPessoaTest(1,"João Carvalho", "14964166007",
+                "joao.teste.com", LocalDate.of(1988, 1, 25), null, true);
 
         this.pessoaServiceImp.save(pessoaEmailInvalido);
     }
@@ -60,9 +73,6 @@ public class PessoaServiceTest {
     @Test
     public void deveAtualizarPessoaComDadosValidos() throws ApiValidationException {
         final int id = 1;
-        Pessoa pessoa = Pessoa.builder().nome("Luiz Silva").cpf("157.091.860-07").email("luiz@teste.com")
-                .dataNascimento(LocalDate.of(1980, 12, 2)).foto(null).build();
-
         Pessoa pessoaAlterada = Pessoa.builder().nome("Luiz Paulo da Silva").cpf("665.617.950-91")
                 .email("luiz.paulo.09@hotmail.com").dataNascimento(LocalDate.of(1991, 12, 2))
                 .build();
@@ -76,5 +86,55 @@ public class PessoaServiceTest {
         assertEquals(pessoaAdicionada.getCpf(), pessoa.getCpf());
         assertEquals(pessoaAdicionada.getEmail(), pessoa.getEmail());
         assertEquals(pessoaAdicionada.getDataNascimento(), pessoa.getDataNascimento());
+    }
+
+    @Test
+    public void deveBuscarTodasAsPessoasCadastradas() {
+        Pageable pageable = PageRequest.of(0, 20);
+
+        List<Pessoa> listPessoas = buildListPessoasTest(pessoa);
+
+        when(this.pessoaRepository.findAll(pageable)).thenReturn(new PageImpl<>(listPessoas));
+
+        Page<Pessoa> pessoas = this.pessoaServiceImp.findAll(pageable);
+
+        assertNotNull(pessoas);
+        assertFalse(pessoas.getContent().isEmpty());
+        assertTrue(pessoas.getTotalElements() > 0);
+        assertEquals(pessoas.getSize(), listPessoas.size());
+        assertEquals(pessoas.getContent().get(0), listPessoas.get(0));
+        assertEquals(pessoas.getContent().get(1).getId(), listPessoas.get(1).getId());
+        assertEquals(pessoas.getContent().get(1).getCpf(), listPessoas.get(1).getCpf());
+    }
+
+    @Test
+    public void deveBuscarPessoaCadastradaPorId() {
+        final int id = 1;
+
+        when(this.pessoaRepository.findById(id)).thenReturn(Optional.of(pessoa));
+
+        Optional<Pessoa> optionalPessoa = this.pessoaServiceImp.findById(id);
+
+        assertTrue(optionalPessoa.isPresent());
+        assertEquals(optionalPessoa.get().getId(), pessoa.getId());
+        assertEquals(optionalPessoa.get().getCpf(), pessoa.getCpf());
+        assertEquals(optionalPessoa.get().getEmail(), pessoa.getEmail());
+    }
+
+    @Test
+    public void naoDeveBuscarPessoaCadastradaIdNaoEncontrado() {
+        final int id = 3;
+
+        when(this.pessoaRepository.findById(id)).thenReturn(Optional.empty());
+
+        Optional<Pessoa> optionalPessoa = this.pessoaServiceImp.findById(id);
+
+        assertTrue(optionalPessoa.isEmpty());
+    }
+
+    @Test(expected = BadRequestExcepion.class)
+    public void naoDeveBuscarPessoaCadastradaErroPorNaoInformarId() {
+        Integer id = null;
+        this.pessoaServiceImp.findById(id);
     }
 }
