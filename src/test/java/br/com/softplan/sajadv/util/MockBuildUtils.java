@@ -1,7 +1,8 @@
 package br.com.softplan.sajadv.util;
 
 import br.com.softplan.sajadv.entity.Pessoa;
-import br.com.softplan.sajadv.wrapper.ResponseValidationMessage;
+import br.com.softplan.sajadv.wrapper.ResponseMessage;
+import br.com.softplan.sajadv.wrapper.ResponseValidation;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -17,9 +18,10 @@ public class MockBuildUtils {
         return pessoa;
     }
 
-    public static ResponseValidationMessage buildValidationMessage(String mensagem,
-                                                                   List<String> validacoes) {
-        return ResponseValidationMessage.builder().mensagem(mensagem)
+    public static ResponseValidation buildValidationMessage(String mensagem,
+                                                            List<String> validacoes) {
+        return ResponseValidation.builder()
+                .response(ResponseMessage.builder().mensagem(mensagem).build())
                 .validacoes(validacoes).build();
     }
 

@@ -3,7 +3,8 @@ package br.com.softplan.sajadv.resource;
 import br.com.softplan.sajadv.entity.Pessoa;
 import br.com.softplan.sajadv.exception.ApiValidationException;
 import br.com.softplan.sajadv.service.imp.PessoaServiceImp;
-import br.com.softplan.sajadv.wrapper.ResponseValidationMessage;
+import br.com.softplan.sajadv.service.imp.StorageServiceImp;
+import br.com.softplan.sajadv.wrapper.ResponseValidation;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.hamcrest.Matchers;
 import org.junit.Before;
@@ -40,6 +41,9 @@ public class PessoaResourceTest {
     @MockBean
     private PessoaServiceImp pessoaServiceImp;
 
+    @MockBean
+    private StorageServiceImp storageServiceImp;
+
     private Pessoa pessoa;
     private Pageable pageable;
     private ObjectMapper objectMapper;
@@ -74,10 +78,11 @@ public class PessoaResourceTest {
 
     @Test
     public void naoDeveCadastrarPessoaDeveRetornarErroDeValidacao() throws Exception {
-        ResponseValidationMessage responseValidationMessage = buildValidationMessage("Campos inválidos",
+        ResponseValidation responseValidationMessage = buildValidationMessage("Campos inválidos",
                 List.of("CPF - Campo deve ser válido."));
 
-        when(this.pessoaServiceImp.save(pessoa)).thenThrow(new ApiValidationException(responseValidationMessage.getMensagem(),
+        when(this.pessoaServiceImp.save(pessoa)).thenThrow(new ApiValidationException(
+                responseValidationMessage.getResponse().getMensagem(),
                 responseValidationMessage.getValidacoes()));
 
         this.mockMvc.perform(MockMvcRequestBuilders.post("/pessoas/")
@@ -86,10 +91,10 @@ public class PessoaResourceTest {
                 .contentType(MediaType.APPLICATION_JSON))
                 .andDo(MockMvcResultHandlers.print())
                 .andExpect(MockMvcResultMatchers.status().isBadRequest())
-                .andExpect(MockMvcResultMatchers.jsonPath("$['mensagem']", Matchers
-                        .equalToIgnoringCase("Campos inválidos")))
-                .andExpect(MockMvcResultMatchers.jsonPath("$['validacoes'][0]", Matchers
-                        .equalToIgnoringCase("CPF - Campo deve ser válido.")));
+                .andExpect(MockMvcResultMatchers.jsonPath("$['response']['mensagem']",
+                        Matchers.equalToIgnoringCase("Campos inválidos")))
+                .andExpect(MockMvcResultMatchers.jsonPath("$['validacoes'][0]",
+                        Matchers.equalToIgnoringCase("CPF - Campo deve ser válido.")));
     }
 
     @Test

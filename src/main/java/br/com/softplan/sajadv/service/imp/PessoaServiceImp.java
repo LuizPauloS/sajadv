@@ -17,8 +17,12 @@ import java.util.Optional;
 @Service
 public class PessoaServiceImp implements IPessoaService {
 
+    private final PessoaRepository pessoaRepository;
+
     @Autowired
-    private PessoaRepository pessoaRepository;
+    public PessoaServiceImp(PessoaRepository pessoaRepository) {
+        this.pessoaRepository = pessoaRepository;
+    }
 
     @Override
     public Page<Pessoa> findAll(Pageable pageable) {
@@ -60,26 +64,36 @@ public class PessoaServiceImp implements IPessoaService {
 
     @Override
     public Pessoa update(Integer id, Pessoa pessoa) throws ApiValidationException {
-        Optional<Pessoa> optionalPessoa;
+        Optional<Pessoa> optional;
         if (pessoa != null && id != null) {
-            optionalPessoa = this.pessoaRepository.findById(id);
-            ValidatorService.validarAtributosEntidade(optionalPessoa.get());
-            optionalPessoa.ifPresent(pessoaAtualizada -> {
-                pessoaAtualizada.setCpf(pessoaAtualizada.getCpf() == null ? pessoa.getCpf() :
-                        pessoaAtualizada.getCpf());
-                pessoaAtualizada.setNome(pessoaAtualizada.getNome() == null ? pessoa.getNome() :
-                        pessoaAtualizada.getNome());
-                pessoaAtualizada.setCpf(pessoaAtualizada.getEmail() == null ? pessoa.getEmail() :
-                        pessoaAtualizada.getEmail());
-                pessoaAtualizada.setDataNascimento(pessoaAtualizada.getDataNascimento() == null ?
-                        pessoa.getDataNascimento() : pessoaAtualizada.getDataNascimento());
-                pessoaAtualizada.setAtivo(!pessoaAtualizada.isAtivo() ? pessoa.isAtivo() :
-                        pessoaAtualizada.isAtivo());
-                this.pessoaRepository.save(pessoaAtualizada);
+            optional = this.pessoaRepository.findById(id);
+            ValidatorService.validarAtributosEntidade(optional.get());
+            optional.ifPresent(pessoaAlterada -> {
+                pessoaAlterada.setCpf(pessoaAlterada.getCpf() == null ? pessoa.getCpf() :
+                        pessoaAlterada.getCpf());
+                pessoaAlterada.setNome(pessoaAlterada.getNome() == null ? pessoa.getNome() :
+                        pessoaAlterada.getNome());
+                pessoaAlterada.setCpf(pessoaAlterada.getEmail() == null ? pessoa.getEmail() :
+                        pessoaAlterada.getEmail());
+                pessoaAlterada.setDataNascimento(pessoaAlterada.getDataNascimento() == null ?
+                        pessoa.getDataNascimento() : pessoaAlterada.getDataNascimento());
+                pessoaAlterada.setAtivo(!pessoaAlterada.isAtivo() ? pessoa.isAtivo() :
+                        pessoaAlterada.isAtivo());
+                this.pessoaRepository.save(pessoaAlterada);
             });
-            return optionalPessoa.get();
+            return optional.get();
         }
         throw new BadRequestExcepion("Ocorreu um erro ao atualizar dados referentes a pessoa. " +
                 "Verifique se os dados e tente novamente.");
+    }
+
+    @Override
+    public Optional<Pessoa> findByNomeFoto(String fileName) {
+        return this.pessoaRepository.findByNomeFoto(fileName);
+    }
+
+    @Override
+    public Optional<Pessoa> findByUrlFoto(String urlFile) {
+        return this.pessoaRepository.findByUrlFoto(urlFile);
     }
 }

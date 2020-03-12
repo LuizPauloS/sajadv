@@ -7,8 +7,8 @@ import java.util.List;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class ResponseValidationMessage {
+public class ResponseValidation {
 
-    String mensagem;
+    ResponseMessage response;
     List<String> validacoes;
 }

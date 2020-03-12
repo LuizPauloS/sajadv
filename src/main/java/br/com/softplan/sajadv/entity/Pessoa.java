@@ -54,6 +54,11 @@ public class Pessoa extends BaseEntity {
     @Lob
     private byte[] foto;
 
-    @Column(columnDefinition = "TINYINT(1)")
+    @Column(name = "url_foto")
+    private String urlFoto;
+
+    @Column(name = "nome_foto")
+    private String nomeFoto;
+
     private boolean ativo = true;
 }

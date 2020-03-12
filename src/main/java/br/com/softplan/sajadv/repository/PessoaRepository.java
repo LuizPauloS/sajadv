@@ -7,6 +7,8 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.PagingAndSortingRepository;
 import org.springframework.stereotype.Repository;
 
+import java.util.Optional;
+
 @Repository
 public interface PessoaRepository extends PagingAndSortingRepository<Pessoa, Integer> {
 
@@ -14,4 +16,7 @@ public interface PessoaRepository extends PagingAndSortingRepository<Pessoa, Int
     @Query(value = "SELECT p FROM Pessoa p WHERE p.ativo = true")
     Page<Pessoa> findAll(Pageable pageable);
 
+    Optional<Pessoa> findByNomeFoto(String fileName);
+
+    Optional<Pessoa> findByUrlFoto(String urlFile);
 }
