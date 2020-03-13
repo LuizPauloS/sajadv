@@ -45,7 +45,7 @@ public class Pessoa extends BaseEntity {
     @Column(nullable = false)
     private String email;
 
-    @JsonFormat(pattern = "dd/MM/yyyy")
+    @JsonFormat(pattern = "yyyy-MM-dd")
     @JsonDeserialize(using = LocalDateDeserializer.class)
     @JsonSerialize(using = LocalDateSerializer.class)
     @Column(name = "data_nascimento")

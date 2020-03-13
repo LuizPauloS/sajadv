@@ -72,7 +72,7 @@ public class PessoaResourceTest {
                 .andExpect(MockMvcResultMatchers.jsonPath("$['cpf']", Matchers.is("157.091.860-07")))
                 .andExpect(MockMvcResultMatchers.jsonPath("$['email']", Matchers.is("luiz@teste.com")))
                 .andExpect(MockMvcResultMatchers.jsonPath("$['dataNascimento']", Matchers.is(LocalDate.now()
-                        .format(DateTimeFormatter.ofPattern("dd/MM/yyyy")))))
+                        .format(DateTimeFormatter.ofPattern("yyyy-MM-dd")))))
                 .andExpect(MockMvcResultMatchers.jsonPath("$['ativo']", Matchers.is(true)));
     }
 
@@ -113,7 +113,7 @@ public class PessoaResourceTest {
                 .andExpect(MockMvcResultMatchers.jsonPath("$['cpf']", Matchers.is("157.091.860-07")))
                 .andExpect(MockMvcResultMatchers.jsonPath("$['email']", Matchers.is("luiz@teste.com")))
                 .andExpect(MockMvcResultMatchers.jsonPath("$['dataNascimento']", Matchers.is(LocalDate.now()
-                        .format(DateTimeFormatter.ofPattern("dd/MM/yyyy")))))
+                        .format(DateTimeFormatter.ofPattern("yyyy-MM-dd")))))
                 .andExpect(MockMvcResultMatchers.jsonPath("$['ativo']", Matchers.is(true)));
     }
 
@@ -134,7 +134,7 @@ public class PessoaResourceTest {
                 .andExpect(MockMvcResultMatchers.jsonPath("$['content'][0].['cpf']", Matchers.is("157.091.860-07")))
                 .andExpect(MockMvcResultMatchers.jsonPath("$['content'][0].['email']", Matchers.is("luiz@teste.com")))
                 .andExpect(MockMvcResultMatchers.jsonPath("$['content'][0].['dataNascimento']", Matchers.is(LocalDate.now()
-                        .format(DateTimeFormatter.ofPattern("dd/MM/yyyy")))))
+                        .format(DateTimeFormatter.ofPattern("yyyy-MM-dd")))))
                 .andExpect(MockMvcResultMatchers.jsonPath("$['content'][0].['ativo']", Matchers.is(true)))
                 .andExpect(MockMvcResultMatchers.jsonPath("$['totalElements']", Matchers.is(listPessoas.size())))
                 .andExpect(MockMvcResultMatchers.jsonPath("$['totalPages']", Matchers.is(1)))

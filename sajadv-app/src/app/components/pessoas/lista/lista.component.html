@@ -1,0 +1,46 @@
+<app-header></app-header>
+  <div class="sajadv-top">
+    <div class="table-responsive">
+      <table class="table table-striped table-sm">
+        <thead>
+          <tr>
+            <th scope="col">Nome</th>
+            <th scope="col">CPF</th>
+            <th scope="col">E-mail</th>
+            <th scope="col">Data Nascimento</th>
+            <th scope="col" class="sajadv-center">Ações</th>
+          </tr>
+        </thead>
+        <tbody *ngIf="listNotEmpty()">
+          <tr *ngFor="let pessoa of pessoas | paginate: { itemsPerPage: items, currentPage: page }">
+            <td scope="row">{{ pessoa.nome }}</td>
+            <td scope="row">{{ pessoa.cpf }}</td>
+            <td scope="row">{{ pessoa.email }}</td>
+            <td scope="row">{{ pessoa.dataNascimento | date: 'dd/MM/yyyy' }}</td>
+            <td scope="row" class="sajadv-center">
+              <a class="btn" routerLink="/pessoas/detalhes/{{ pessoa.id }}" title="Visualizar Detalhes Registro">
+                <i class="fa fa-search" aria-hidden="true"></i>
+              </a>
+              <a class="btn" routerLink="/pessoas/editar/{{ pessoa.id }}" title="Editar Registro">
+                <i class="fa fa-pencil"></i>
+              </a>
+              <button class="btn" title="Deletar Registro" (click)="setarPessoa(pessoa)"
+                  data-toggle="modal" data-target="#exampleModal">
+                <i class="fa fa-trash"></i>
+              </button>
+            </td>
+          </tr>
+        </tbody>
+        <tbody>
+          <tr *ngIf="!listNotEmpty()">
+            <td colspan="5" class="sajadv-center">Nenhum registro encontrado!</td>
+          </tr>
+        </tbody>
+      </table>
+      <div *ngIf="listNotEmpty()">
+        <pagination-controls class="sajadv-center" (pageChange)="page = $event" responsive="true"></pagination-controls>
+      </div>
+    </div>
+  </div>
+<app-modal title="{{ title }}" message="{{ message }}" (notify)="deletarRegistro()"></app-modal>
+<app-footer></app-footer>

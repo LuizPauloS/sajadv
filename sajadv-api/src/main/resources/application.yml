@@ -15,6 +15,6 @@ spring:
         type: trace
   datasource:
     driver-class-name: org.postgresql.Driver
-    url: jdbc:postgresql://db:5432/sajadv
+    url: jdbc:postgresql://sajadv-db:5432/sajadv
     username: postgres
     password: s4j@dv2020

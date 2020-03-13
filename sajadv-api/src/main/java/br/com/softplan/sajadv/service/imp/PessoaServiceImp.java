@@ -67,21 +67,18 @@ public class PessoaServiceImp implements IPessoaService {
         Optional<Pessoa> optional;
         if (pessoa != null && id != null) {
             optional = this.pessoaRepository.findById(id);
-            ValidatorService.validarAtributosEntidade(optional.get());
-            optional.ifPresent(pessoaAlterada -> {
-                pessoaAlterada.setCpf(pessoaAlterada.getCpf() == null ? pessoa.getCpf() :
-                        pessoaAlterada.getCpf());
-                pessoaAlterada.setNome(pessoaAlterada.getNome() == null ? pessoa.getNome() :
-                        pessoaAlterada.getNome());
-                pessoaAlterada.setCpf(pessoaAlterada.getEmail() == null ? pessoa.getEmail() :
-                        pessoaAlterada.getEmail());
-                pessoaAlterada.setDataNascimento(pessoaAlterada.getDataNascimento() == null ?
-                        pessoa.getDataNascimento() : pessoaAlterada.getDataNascimento());
-                pessoaAlterada.setAtivo(!pessoaAlterada.isAtivo() ? pessoa.isAtivo() :
-                        pessoaAlterada.isAtivo());
-                this.pessoaRepository.save(pessoaAlterada);
-            });
-            return optional.get();
+            ValidatorService.validarAtributosEntidade(pessoa);
+            if (optional.isPresent()) {
+                optional.get().setCpf(pessoa.getCpf() != null && !optional.get().getCpf().equals(pessoa.getCpf()) ?
+                    pessoa.getCpf() : optional.get().getCpf());
+                optional.get().setNome(pessoa.getNome() != null ?
+                        pessoa.getNome() : optional.get().getNome());
+                optional.get().setEmail(pessoa.getEmail() != null ?
+                        pessoa.getEmail() : optional.get().getEmail());
+                optional.get().setDataNascimento(pessoa.getDataNascimento() != null ?
+                        pessoa.getDataNascimento() : optional.get().getDataNascimento());
+            }
+            return this.pessoaRepository.save(optional.get());
         }
         throw new BadRequestExcepion("Ocorreu um erro ao atualizar dados referentes a pessoa. " +
                 "Verifique se os dados e tente novamente.");

@@ -20,6 +20,7 @@ import java.io.IOException;
 import java.util.Objects;
 import java.util.Optional;
 
+@CrossOrigin
 @RestController
 @RequestMapping("/pessoas")
 public class PessoaResource {
@@ -70,42 +71,9 @@ public class PessoaResource {
                 .build());
     }
 
-    @RequestMapping(method = RequestMethod.POST, value = "/upload/{id}")
-    public ResponseEntity<?> upload(@RequestParam("file") MultipartFile file, @PathVariable("id") Integer id) {
-        if (id == null) {
-            return ResponseEntity.badRequest().build();
-        }
-        String fileName = StringUtils.cleanPath(Objects.requireNonNull(file.getOriginalFilename()));
-        this.pessoaServiceImp.findById(id).ifPresent(pessoa -> {
-            try {
-                pessoa.setFoto(file.getBytes());
-                pessoa.setNomeFoto(fileName);
-                pessoaServiceImp.save(pessoa);
-            } catch (IOException | ApiValidationException e) {
-                e.printStackTrace();
-            }
-        });
-        String fileDownloadUri = ServletUriComponentsBuilder.fromCurrentContextPath()
-                .path("/files/download/")
-                .path(fileName).path("/db")
-                .toUriString();
-        return ResponseEntity.ok(fileDownloadUri);
-    }
-
-    @RequestMapping(method = RequestMethod.GET,value = "/download/{fileName:.*}")
-    public ResponseEntity<?> download(@PathVariable String fileName) {
-        Optional<Pessoa> optionalPessoa = pessoaServiceImp.findByNomeFoto(fileName);
-        if (optionalPessoa.isPresent()) {
-            return ResponseEntity.ok()
-                    .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + fileName + "\"")
-                    .body(optionalPessoa.get().getFoto());
-        }
-        return ResponseEntity.notFound().build();
-    }
-
-    @PostMapping(value = "/foto/{id}")
-    public ResponseEntity<String> uploadFotoPerfil(@PathVariable("id") Integer id,
-                                                   @RequestParam("file") MultipartFile file) {
+    @PostMapping(value = "/upload/{id}")
+    public ResponseEntity<String> upload(@PathVariable("id") Integer id,
+                                         @RequestParam("file") MultipartFile file) {
         String url = storageServiceImp.saveFile(file, id);
         if(!StringUtils.isEmpty(url)){
             return ResponseEntity.ok(url);
@@ -114,9 +82,9 @@ public class PessoaResource {
                 body("Ocorreu um erro ao salvar foto!");
     }
 
-    @GetMapping("/recuperar")
-    public ResponseEntity<byte[]> recuperar(@RequestParam String url) {
-        return ResponseEntity.ok(storageServiceImp.readFile(url));
+    @GetMapping("/recover/{id}")
+    public ResponseEntity<byte[]> recover(@PathVariable("id") Integer id) {
+        return ResponseEntity.ok(storageServiceImp.readFile(id));
     }
 
 }

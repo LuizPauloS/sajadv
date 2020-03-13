@@ -1,0 +1,27 @@
+<app-header></app-header>
+<div *ngIf="pessoa" class="sajadv-top">
+  <h2>Detalhes do Registro:</h2>
+  <hr>
+  <div>
+    <div class="form-group">
+      <label for="nome">Nome: </label>
+      <input type="text" class="form-control" id="nome" placeholder="Nome da Pessoa" value="{{ pessoa.nome }}" disabled>
+    </div>
+    <div class="form-group">
+      <label for="cpf">CPF: </label>
+      <input type="text" class="form-control" id="cpf" placeholder="CPF da Pessoa" value="{{ pessoa.cpf }}" disabled>
+    </div>
+    <div class="form-group">
+      <label for="email">E-mail: </label>
+      <input type="text" class="form-control" id="email" placeholder="E-mail da Pessoa" value="{{ pessoa.email }}" disabled>
+    </div>
+    <div class="form-group">
+      <label for="dataNascimento">Data de Nascimento: </label>
+      <input type="text" class="form-control" id="dataNascimento" value="{{ pessoa.dataNascimento | date: 'dd/MM/yyyy' }}" disabled>
+    </div>
+  </div>
+  <div class="form-group">
+    <button class="btn btn-primary btn-block" (click)="back()">Voltar</button>
+  </div>
+</div>
+<app-footer></app-footer>

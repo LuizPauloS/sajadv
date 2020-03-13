@@ -1,5 +1,5 @@
 FROM adoptopenjdk/openjdk11-openj9:alpine-slim
-LABEL maintainer 'Luiz Paulo da Silva'
+LABEL maintainer = 'Luiz Paulo da Silva'
 
 ENV JAVA_OPTS=" -server -Duser.timezone=America/Sao_Paulo -Duser.language=pt -Duser.country=BR -Dfile.encoding=UTF-8"
 ADD target/*.jar /build/app.jar

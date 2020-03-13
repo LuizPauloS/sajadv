@@ -4,7 +4,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 public interface IStorageService {
 
-    byte[] readFile(String urlFile);
+    byte[] readFile(Integer id);
 
     String saveFile(MultipartFile file, Integer id);
 }

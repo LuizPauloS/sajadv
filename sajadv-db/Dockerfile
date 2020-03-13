@@ -1,5 +1,5 @@
 FROM postgres
-LABEL maintainer 'Luiz Paulo da Silva'
+LABEL maintainer = 'Luiz Paulo da Silva'
 
 ENV POSTGRES_USER postgres
 ENV POSTGRES_PASSWORD s4j@dv2020

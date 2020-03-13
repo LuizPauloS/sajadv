@@ -30,9 +30,9 @@ public class StorageServiceImp implements IStorageService {
     }
 
     @Override
-    public byte[] readFile(String urlFile) {
+    public byte[] readFile(Integer id) {
         String url;
-        Optional<Pessoa> optional = pessoaServiceImp.findByUrlFoto(urlFile);
+        Optional<Pessoa> optional = pessoaServiceImp.findById(id);
         try {
             if (optional.isPresent()) {
                 url = optional.get().getUrlFoto();
