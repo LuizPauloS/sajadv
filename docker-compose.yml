@@ -1,0 +1,26 @@
+version: '3.7'
+services:
+  db:
+    image: sajadv-db
+    ports:
+      - "5432:5432"
+    networks:
+      - app-net
+    build:
+      context: sajadv-db/
+    restart: unless-stopped
+  service:
+    image: sajadv-api
+    depends_on:
+      - db
+    ports:
+      - "8080:8080"
+    networks:
+      - app-net
+    build:
+      context: sajadv-api/
+    restart: unless-stopped
+volumes:
+  postgres-data:
+networks:
+  app-net:
