@@ -14,7 +14,7 @@ Para criar o sistema foram utilizados as seguintes ferramentas/frameworks:
 
 # Composição da Stack
 
-A Stack do Newcredit é composta por 4 aplicações, são elas:
+A Stack do SAJ ADV é composta por 4 aplicações, são elas:
 
 - sajadv-db: Pacote que contém as devidas configurações para executar banco de dados PostgreSQL
 
