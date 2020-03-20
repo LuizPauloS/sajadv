@@ -15,13 +15,11 @@ RUN mvn clean install
 FROM adoptopenjdk/openjdk11-openj9:alpine-slim
 MAINTAINER 'Luiz Paulo da Silva'
 
-ENV JAVA_OPTS=" -server -Duser.timezone=America/Sao_Paulo -Duser.language=pt -Duser.country=BR -Dfile.encoding=UTF-8 -Dspring.profiles.active=production"
+ENV JAVA_OPTS=" -server -Duser.timezone=America/Sao_Paulo -Duser.language=pt -Duser.country=BR -Dfile.encoding=UTF-8"
 WORKDIR /api
 
-COPY --from=builder /usr/src/api/target/*.jar /api/sajadv-api.jar
+COPY --from=builder /usr/src/api/target/*.jar /api/sajadv-eureka-server.jar
 
-VOLUME /home/db/img/:/home/img
+EXPOSE 8761
 
-EXPOSE 8080
-
-CMD java $JAVA_OPTS -jar sajadv-api.jar
+CMD java $JAVA_OPTS -jar sajadv-eureka-server.jar

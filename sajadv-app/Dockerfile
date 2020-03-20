@@ -1,3 +1,15 @@
+### Multi Stage Build ###
+### Estágio 1 - Obter o source e gerar o build ###
+FROM node:12.16.1-buster-slim AS builder
+
+WORKDIR /app
+
+RUN npm install && npm -v
+
+COPY . /app
+RUN $(npm bin)/ng build --configuration=production
+
+### Estágio 2 - Subir o source para o servidor NGINX
 FROM nginx:1.14.1-alpine
 LABEL maintainer = 'Luiz Paulo da Silva'
 
@@ -8,7 +20,7 @@ COPY nginx/default.conf /etc/nginx/conf.d/
 RUN rm -rf /usr/share/nginx/html/*
 
 ## From ‘builder’ stage copy over the artifacts in dist folder to default nginx public folder
-COPY /dist/* /usr/share/nginx/html
+COPY --from=builder /app/dist/* /usr/share/nginx/html
 RUN ls /usr/share/nginx/html
 
 CMD ["nginx", "-g", "daemon off;"]

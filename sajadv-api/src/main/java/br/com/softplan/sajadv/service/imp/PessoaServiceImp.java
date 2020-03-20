@@ -69,14 +69,7 @@ public class PessoaServiceImp implements IPessoaService {
             optional = this.pessoaRepository.findById(id);
             ValidatorService.validarAtributosEntidade(pessoa);
             if (optional.isPresent()) {
-                optional.get().setCpf(pessoa.getCpf() != null && !optional.get().getCpf().equals(pessoa.getCpf()) ?
-                    pessoa.getCpf() : optional.get().getCpf());
-                optional.get().setNome(pessoa.getNome() != null ?
-                        pessoa.getNome() : optional.get().getNome());
-                optional.get().setEmail(pessoa.getEmail() != null ?
-                        pessoa.getEmail() : optional.get().getEmail());
-                optional.get().setDataNascimento(pessoa.getDataNascimento() != null ?
-                        pessoa.getDataNascimento() : optional.get().getDataNascimento());
+                setValueDataPessoa(pessoa, optional);
             }
             return this.pessoaRepository.save(optional.get());
         }
@@ -92,5 +85,16 @@ public class PessoaServiceImp implements IPessoaService {
     @Override
     public Optional<Pessoa> findByUrlFoto(String urlFile) {
         return this.pessoaRepository.findByUrlFoto(urlFile);
+    }
+
+    private void setValueDataPessoa(Pessoa pessoa, Optional<Pessoa> optional) {
+        optional.get().setCpf(pessoa.getCpf() != null && !optional.get().getCpf().equals(pessoa.getCpf()) ?
+                pessoa.getCpf() : optional.get().getCpf());
+        optional.get().setNome(pessoa.getNome() != null ?
+                pessoa.getNome() : optional.get().getNome());
+        optional.get().setEmail(pessoa.getEmail() != null ?
+                pessoa.getEmail() : optional.get().getEmail());
+        optional.get().setDataNascimento(pessoa.getDataNascimento() != null ?
+                pessoa.getDataNascimento() : optional.get().getDataNascimento());
     }
 }

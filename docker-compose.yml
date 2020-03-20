@@ -9,10 +9,20 @@ services:
     build:
       context: sajadv-db/
     restart: unless-stopped
+  sajadv-eureka-server:
+    image: sajadv-eureka-server
+    ports:
+      - "8761:8761"
+    networks:
+      - app-net
+    build:
+      context: sajadv-eureka-server/
+    restart: unless-stopped
   sajadv-api:
     image: sajadv-api
     depends_on:
       - sajadv-db
+      - sajadv-eureka-server
     ports:
       - "8080:8080"
     networks:
