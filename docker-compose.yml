@@ -18,11 +18,22 @@ services:
     build:
       context: sajadv-eureka-server/
     restart: unless-stopped
+  sajadv-gateway:
+    image: sajadv-gateway
+    depends_on:
+      - sajadv-eureka-server
+    ports:
+      - "8762:8762"
+    networks:
+      - app-net
+    build:
+      context: sajadv-gateway/
+    restart: unless-stopped
   sajadv-api:
     image: sajadv-api
     depends_on:
       - sajadv-db
-      - sajadv-eureka-server
+      - sajadv-gateway
     ports:
       - "8080:8080"
     networks:

@@ -3,10 +3,10 @@ server:
     context-path: /sajadv-service/v1
 
 spring:
-  profiles:
-    active: default
   application:
     name: sajadv-service
+  profiles:
+    active: default
   jpa:
     hibernate.ddl-auto: update
     show-sql: true
@@ -19,14 +19,16 @@ spring:
         type: trace
   datasource:
     driver-class-name: org.postgresql.Driver
-    url: jdbc:postgresql://0.0.0.0:5432/sajadv
+    url: jdbc:postgresql://localhost:5432/sajadv
     username: postgres
     password: s4j@dv2020
 
 eureka:
+  instance:
+    hostname: localhost
   client:
     serviceUrl:
-      defaultZone: http://0.0.0.0:8761/eureka
+      defaultZone: http://${eureka.instance.hostname}:8761/eureka
 
 ---
 
@@ -39,6 +41,8 @@ spring:
     password: s4j@dv2020
 
 eureka:
+  instance:
+    hostname: 0.0.0.0
   client:
     serviceUrl:
-      defaultZone: http://sajadv-eureka-server:8761/eureka
+      defaultZone: http://${eureka.instance.hostname}:8761/eureka
