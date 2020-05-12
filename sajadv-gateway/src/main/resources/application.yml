@@ -2,29 +2,31 @@ server:
   port: 8762
 
 spring:
-  application:
-    name: sajadv-gateway
   profiles:
     active: default
+#  cloud:
+#    loadbalancer:
+#      ribbon:
+#        enabled: false
 
 eureka:
-  instance:
-    hostname: localhost
+#  instance:
+#    prefer-ip-address: true
   client:
     serviceUrl:
-      defaultZone: http://${eureka.instance.hostname}:8761/eureka
+      defaultZone: http://localhost:8761/eureka/
+    fetch-registry: true
+    register-with-eureka: true
 
 zuul:
   prefix: /api
-  ignored-services: /*
+  ignored-services: '*'
   routes:
-    customers:
-      path: /sajadv-service/v1/**
+    pessoas:
+      path: /**
       serviceId: sajadv-service
       strip-prefix: false
-
-ribbon:
-  ReadTimeout: 60000
+  sensitive-headers: Cookie
 
 ---
 
@@ -32,8 +34,6 @@ spring:
   profiles: production
 
 eureka:
-  instance:
-    hostname: 0.0.0.0
   client:
     serviceUrl:
-      defaultZone: http://${eureka.instance.hostname}:8761/eureka
+      defaultZone: http://eureka:8761/eureka/

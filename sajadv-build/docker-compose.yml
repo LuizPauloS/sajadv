@@ -1,0 +1,8 @@
+version: '3.7'
+services:
+    app:
+      image: builder
+      volumes:
+        - ../:/opt/build
+        - $HOME/.m2:/root/
+      command: sh /opt/build/docker-build/build.sh

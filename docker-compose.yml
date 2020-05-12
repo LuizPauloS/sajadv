@@ -1,33 +1,44 @@
 version: '3.7'
 services:
-  sajadv-db:
-    image: sajadv-db
-    ports:
-      - "5432:5432"
-    networks:
-      - app-net
-    build:
-      context: sajadv-db/
-    restart: unless-stopped
-  sajadv-eureka-server:
-    image: sajadv-eureka-server
+  eureka:
     ports:
       - "8761:8761"
+    expose:
+      - "8761"
+    environment:
+      - EUREKA_HOST=eureka
     networks:
       - app-net
+    tty: false
     build:
-      context: sajadv-eureka-server/
+      context: sajadv-discovery/
     restart: unless-stopped
   sajadv-gateway:
     image: sajadv-gateway
     depends_on:
-      - sajadv-eureka-server
+      - eureka
     ports:
       - "8762:8762"
+    expose:
+      - "8762"
+    environment:
+      - EUREKA_HOST=eureka
+    networks:
+      - app-net
+    tty: false
+    build:
+      context: sajadv-gateway/
+    restart: unless-stopped
+  sajadv-db:
+    image: sajadv-db
+    ports:
+      - "5432:5432"
+    expose:
+      - "5432"
     networks:
       - app-net
     build:
-      context: sajadv-gateway/
+      context: sajadv-db/
     restart: unless-stopped
   sajadv-api:
     image: sajadv-api
@@ -36,8 +47,13 @@ services:
       - sajadv-gateway
     ports:
       - "8080:8080"
+    expose:
+      - "8080"
+    environment:
+      - EUREKA_HOST=eureka
     networks:
       - app-net
+    tty: false
     build:
       context: sajadv-api/
     restart: unless-stopped
