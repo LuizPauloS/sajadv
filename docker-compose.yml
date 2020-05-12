@@ -40,8 +40,8 @@ services:
     build:
       context: sajadv-db/
     restart: unless-stopped
-  sajadv-api:
-    image: sajadv-api
+  sajadv-persons-api:
+    image: sajadv-persons-api
     depends_on:
       - sajadv-db
       - sajadv-gateway
@@ -55,12 +55,12 @@ services:
       - app-net
     tty: false
     build:
-      context: sajadv-api/
+      context: sajadv-persons-api/
     restart: unless-stopped
   sajadv-app:
     image: sajadv-app
     depends_on:
-      - sajadv-api
+      - sajadv-persons-api
     ports:
       - "4200:80"
     networks:

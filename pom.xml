@@ -23,7 +23,7 @@
     <modules>
         <module>sajadv-gateway</module>
         <module>sajadv-discovery</module>
-        <module>sajadv-api</module>
+        <module>sajadv-persons-api</module>
     </modules>
 
     <dependencies>

@@ -10,10 +10,10 @@
 		<relativePath>../</relativePath>
 	</parent>
 
-	<artifactId>sajadv-api</artifactId>
+	<artifactId>sajadv-persons-api</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	<name>sajadv-api</name>
-	<description>Desafio SAJ ADV Softplan</description>
+	<name>sajadv-persons-api</name>
+	<description>SAJADV Persons API</description>
 
 	<dependencies>
 		<dependency>
