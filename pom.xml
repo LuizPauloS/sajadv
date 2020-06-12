@@ -11,8 +11,8 @@
     </parent>
 
     <groupId>br.com.portfolio.lsilva</groupId>
-    <artifactId>sajadv</artifactId>
-    <version>0.0.1-SNAPSHOT</version>
+    <artifactId>sajadv-service</artifactId>
+    <version>1.0-SNAPSHOT</version>
     <packaging>pom</packaging>
 
     <properties>
@@ -24,6 +24,7 @@
         <module>sajadv-gateway</module>
         <module>sajadv-discovery</module>
         <module>sajadv-persons-api</module>
+        <module>sajadv-entity</module>
     </modules>
 
     <dependencies>
@@ -36,12 +37,20 @@
             <artifactId>spring-boot-starter-web</artifactId>
         </dependency>
         <dependency>
-            <groupId>org.springframework.cloud</groupId>
-            <artifactId>spring-cloud-starter-netflix-eureka-client</artifactId>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-test</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-data-jpa</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+            <optional>true</optional>
         </dependency>
     </dependencies>
-
-
 
     <dependencyManagement>
         <dependencies>
@@ -54,13 +63,4 @@
             </dependency>
         </dependencies>
     </dependencyManagement>
-
-    <build>
-        <plugins>
-            <plugin>
-                <groupId>org.springframework.boot</groupId>
-                <artifactId>spring-boot-maven-plugin</artifactId>
-            </plugin>
-        </plugins>
-    </build>
 </project>

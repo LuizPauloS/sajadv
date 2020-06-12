@@ -1,4 +1,4 @@
-package br.com.portfolio.lsilva.sajadveurekaserver;
+package br.com.portfolio.lsilva.sajadvdiscovery;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
