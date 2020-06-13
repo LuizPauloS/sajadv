@@ -77,16 +77,6 @@ public class PessoaServiceImp implements IPessoaService {
                 "Verifique se os dados e tente novamente.");
     }
 
-    @Override
-    public Optional<Pessoa> findByNomeFoto(String fileName) {
-        return this.pessoaRepository.findByNomeFoto(fileName);
-    }
-
-    @Override
-    public Optional<Pessoa> findByUrlFoto(String urlFile) {
-        return this.pessoaRepository.findByUrlFoto(urlFile);
-    }
-
     private void setValueDataPessoa(Pessoa pessoa, Optional<Pessoa> optional) {
         optional.get().setCpf(pessoa.getCpf() != null && !optional.get().getCpf().equals(pessoa.getCpf()) ?
                 pessoa.getCpf() : optional.get().getCpf());

@@ -4,14 +4,8 @@ server:
 spring:
   profiles:
     active: default
-#  cloud:
-#    loadbalancer:
-#      ribbon:
-#        enabled: false
 
 eureka:
-#  instance:
-#    prefer-ip-address: true
   client:
     serviceUrl:
       defaultZone: http://localhost:8761/eureka/
@@ -24,7 +18,7 @@ zuul:
   routes:
     pessoas:
       path: /**
-      serviceId: sajadv-service
+      serviceId: sajadv-persons-api
       strip-prefix: false
   sensitive-headers: Cookie
 

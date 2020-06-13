@@ -1,14 +1,10 @@
 server:
   servlet:
-    context-path: /sajadv-service/v1
+    context-path: /sajadv-persons-api/v1
 
 spring:
   profiles:
     active: default
-#  cloud:
-#    loadbalancer:
-#      ribbon:
-#        enabled: false
   jpa:
     hibernate.ddl-auto: update
     show-sql: true
@@ -33,6 +29,9 @@ eureka:
       defaultZone: http://localhost:8761/eureka/
     registerWithEureka: true
     fetchRegistry: true
+
+storage:
+  local: /home/img
 
 ---
 

@@ -12,9 +12,9 @@ import java.util.List;
 public class MockBuildUtils {
 
     public static Pessoa buildPessoaTest(Integer id, String nome, String cpf, String email,
-                                         LocalDate dataNascimento, byte[] foto, boolean ativo) {
+                                         LocalDate dataNascimento, boolean ativo) {
         Pessoa pessoa = Pessoa.builder().nome(nome).cpf(cpf).email(email).ativo(ativo)
-                .dataNascimento(dataNascimento).foto(foto).build();
+                .dataNascimento(dataNascimento).build();
         pessoa.setId(id);
         return pessoa;
     }
@@ -33,7 +33,7 @@ public class MockBuildUtils {
         for (int indice = pessoa.getId(); indice <= 9; indice++) {
             Pessoa pessoaClone = buildPessoaTest((pessoa.getId() + indice),
                     pessoa.getNome() + " " + indice, buildCpfsValidos().get(indice),
-                    pessoa.getEmail(), pessoa.getDataNascimento(), null, true );
+                    pessoa.getEmail(), pessoa.getDataNascimento(), true);
             pessoasList.add(pessoaClone);
         }
         return pessoasList;

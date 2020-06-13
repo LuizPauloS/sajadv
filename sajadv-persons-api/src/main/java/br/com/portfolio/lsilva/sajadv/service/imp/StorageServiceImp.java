@@ -4,6 +4,7 @@ import br.com.portfolio.lsilva.sajadv.entity.Pessoa;
 import br.com.portfolio.lsilva.sajadv.exception.BadRequestExcepion;
 import br.com.portfolio.lsilva.sajadv.service.IStorageService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -19,23 +20,23 @@ import static java.nio.file.FileSystems.getDefault;
 public class StorageServiceImp implements IStorageService {
 
     private Path path;
+    @Value("storage.local")
+    private String pathFiles;
     private final PessoaServiceImp pessoaServiceImp;
-    private String pathFiles = "/home/img/";
 
     @Autowired
     public StorageServiceImp(PessoaServiceImp pessoaServiceImp) {
-        this.path = getDefault().getPath(pathFiles);
-        createDir();
         this.pessoaServiceImp = pessoaServiceImp;
     }
 
     @Override
     public byte[] readFile(Integer id) {
+        verifyDirCreated();
         String url;
         Optional<Pessoa> optional = pessoaServiceImp.findById(id);
         try {
             if (optional.isPresent()) {
-                url = optional.get().getUrlFoto();
+                url = optional.get().getArquivo();
                 return Files.readAllBytes(path.resolve(url));
             }
         } catch (IOException e) {
@@ -47,6 +48,7 @@ public class StorageServiceImp implements IStorageService {
 
     @Override
     public String saveFile(MultipartFile file, Integer id) {
+        verifyDirCreated();
         String urlFile = "";
         String nameFile = file.getOriginalFilename();
         Optional<Pessoa> optional = pessoaServiceImp.findById(id);
@@ -54,7 +56,7 @@ public class StorageServiceImp implements IStorageService {
             if (optional.isPresent()) {
                 urlFile = path.toAbsolutePath().toString() + getDefault().getSeparator() + nameFile;
                 file.transferTo(new File(urlFile));
-                optional.get().setUrlFoto(urlFile);
+                optional.get().setArquivo(urlFile);
                 pessoaServiceImp.save(optional.get());
             }
         } catch (Exception e) {
@@ -62,6 +64,11 @@ public class StorageServiceImp implements IStorageService {
             throw new BadRequestExcepion("Ocorreu um erro ao salvar arquivo.");
         }
         return urlFile;
+    }
+
+    private void verifyDirCreated() {
+        this.path = getDefault().getPath(pathFiles);
+        createDir();
     }
 
     private void createDir() {

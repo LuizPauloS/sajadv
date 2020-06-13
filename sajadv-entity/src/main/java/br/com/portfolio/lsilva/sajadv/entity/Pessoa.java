@@ -5,18 +5,12 @@ import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateDeserializer;
 import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateSerializer;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import org.hibernate.validator.constraints.br.CPF;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.Lob;
-import javax.validation.constraints.Email;
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.Size;
+import javax.validation.constraints.*;
 import java.time.LocalDate;
 
 import static br.com.portfolio.lsilva.sajadv.util.ValidatorMessageUtils.*;
@@ -50,14 +44,7 @@ public class Pessoa extends BaseEntity {
     @Column(name = "data_nascimento")
     private LocalDate dataNascimento;
 
-    @Lob
-    private byte[] foto;
-
-    @Column(name = "url_foto")
-    private String urlFoto;
-
-    @Column(name = "nome_foto")
-    private String nomeFoto;
+    private String arquivo;
 
     private boolean ativo = true;
 }

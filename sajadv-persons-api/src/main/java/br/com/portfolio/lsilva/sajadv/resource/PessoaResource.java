@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 @RestController
-@RequestMapping("/pessoas")
+@RequestMapping("/persons")
 public class PessoaResource {
 
     @Autowired
@@ -24,7 +24,7 @@ public class PessoaResource {
     @Autowired
     private StorageServiceImp storageServiceImp;
 
-    @RequestMapping(method = RequestMethod.GET)
+    @RequestMapping(method = RequestMethod.GET, value = "/all")
     public ResponseEntity<?> findAll(Pageable pageable) {
         return ResponseEntity.ok(pessoaServiceImp.findAll(pageable));
     }
@@ -34,7 +34,7 @@ public class PessoaResource {
         return ResponseEntity.ok(pessoaServiceImp.findById(id));
     }
 
-    @RequestMapping(method = RequestMethod.POST)
+    @RequestMapping(method = RequestMethod.POST, value = "/save")
     public ResponseEntity<?> save(@RequestBody Pessoa pessoa) {
         try {
             return ResponseEntity.ok(pessoaServiceImp.save(pessoa));
@@ -45,7 +45,7 @@ public class PessoaResource {
         }
     }
 
-    @RequestMapping(method = RequestMethod.PUT, value = "/{id}")
+    @RequestMapping(method = RequestMethod.PUT, value = "/update/{id}")
     public ResponseEntity<?> update(@RequestBody Pessoa pessoa, @PathVariable("id") Integer id) {
         try {
             return ResponseEntity.ok(pessoaServiceImp.update(id, pessoa));
@@ -56,7 +56,7 @@ public class PessoaResource {
         }
     }
 
-    @RequestMapping(method = RequestMethod.DELETE, value = "/{id}")
+    @RequestMapping(method = RequestMethod.DELETE, value = "/delete/{id}")
     public ResponseEntity<?> delete(@PathVariable("id") Integer id) {
         this.pessoaServiceImp.delete(id);
         return ResponseEntity.ok(ResponseMessage.builder()

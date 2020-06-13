@@ -40,7 +40,7 @@ public class PessoaServiceTest {
     @Before
     public void init() {
         this.pessoa = buildPessoaTest(1,"Luiz Silva", "157.091.860-07",
-                "luiz@teste.com", LocalDate.of(1980, 12, 2), null, true);
+                "luiz@teste.com", LocalDate.of(1980, 12, 2), true);
     }
 
     @Test
@@ -58,7 +58,7 @@ public class PessoaServiceTest {
     @Test(expected = ApiValidationException.class)
     public void naoDeveCadastrarPessoaComCPFInvalido() throws ApiValidationException {
         Pessoa pessoaCpfInvalido = Pessoa.builder().nome("José Santos").cpf("111.111.111-11").email("jose@teste.com")
-                .dataNascimento(LocalDate.of(1988, 1, 25)).foto(null).build();
+                .dataNascimento(LocalDate.of(1988, 1, 25)).arquivo(null).build();
 
         this.pessoaServiceImp.save(pessoaCpfInvalido);
     }
@@ -66,7 +66,7 @@ public class PessoaServiceTest {
     @Test(expected = ApiValidationException.class)
     public void naoDeveCadastrarPessoaComEmailInvalido() throws ApiValidationException {
         Pessoa pessoaEmailInvalido = buildPessoaTest(1,"João Carvalho", "14964166007",
-                "joao.teste.com", LocalDate.of(1988, 1, 25), null, true);
+                "joao.teste.com", LocalDate.of(1988, 1, 25), true);
 
         this.pessoaServiceImp.save(pessoaEmailInvalido);
     }
