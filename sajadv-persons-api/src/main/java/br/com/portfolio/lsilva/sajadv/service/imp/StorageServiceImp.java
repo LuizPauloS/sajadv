@@ -12,6 +12,7 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.Optional;
 
 import static java.nio.file.FileSystems.getDefault;
@@ -19,9 +20,10 @@ import static java.nio.file.FileSystems.getDefault;
 @Service
 public class StorageServiceImp implements IStorageService {
 
-    private Path path;
-    @Value("storage.local")
+    @Value("${storage.local.images}")
     private String pathFiles;
+
+    private Path path;
     private final PessoaServiceImp pessoaServiceImp;
 
     @Autowired
@@ -50,19 +52,33 @@ public class StorageServiceImp implements IStorageService {
     public String saveFile(MultipartFile file, Integer id) {
         verifyDirCreated();
         String urlFile = "";
-        String nameFile = file.getOriginalFilename();
         Optional<Pessoa> optional = pessoaServiceImp.findById(id);
         try {
             if (optional.isPresent()) {
-                urlFile = path.toAbsolutePath().toString() + getDefault().getSeparator() + nameFile;
-                file.transferTo(new File(urlFile));
-                optional.get().setArquivo(urlFile);
+                deleteImageExisting(optional.get());
+                urlFile = addImageDir(file, optional.get());
                 pessoaServiceImp.save(optional.get());
             }
         } catch (Exception e) {
             e.printStackTrace();
             throw new BadRequestExcepion("Ocorreu um erro ao salvar arquivo.");
         }
+        return urlFile;
+    }
+
+    private void deleteImageExisting(Pessoa pessoa) throws IOException {
+        if (pessoa.getArquivo() != null) {
+            System.out.println("Deletando imagem existente: " +
+                    Files.deleteIfExists(Paths.get(path.toAbsolutePath().toString() + getDefault().getSeparator() +
+                            pessoa.getArquivo())));
+        }
+    }
+
+    private String addImageDir(MultipartFile file, Pessoa pessoa) throws IOException {
+        String urlFile;
+        urlFile = path.toAbsolutePath().toString() + getDefault().getSeparator() + file.getOriginalFilename();
+        file.transferTo(new File(urlFile));
+        pessoa.setArquivo(urlFile);
         return urlFile;
     }
 
@@ -78,6 +94,9 @@ public class StorageServiceImp implements IStorageService {
                 System.out.println(String.format("Criando diretório de arquivos - %s",
                         path.toString()));
                 theDir.mkdirs();
+            } else {
+                System.out.println(String.format("Diretório de arquivos existente - %s",
+                        path.toString()));
             }
         } catch (Exception e) {
             throw new RuntimeException("Erro ao criar diretório de arquivos.", e);

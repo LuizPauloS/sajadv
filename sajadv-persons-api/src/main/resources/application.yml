@@ -31,7 +31,8 @@ eureka:
     fetchRegistry: true
 
 storage:
-  local: /home/img
+  local:
+    images: /home/luiz/Documentos/uploads/images/
 
 ---
 
