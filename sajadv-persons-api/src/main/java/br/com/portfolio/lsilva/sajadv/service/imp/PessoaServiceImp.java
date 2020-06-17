@@ -6,7 +6,7 @@ import br.com.portfolio.lsilva.sajadv.exception.NotModifiedException;
 import br.com.portfolio.lsilva.sajadv.repository.PessoaRepository;
 import br.com.portfolio.lsilva.sajadv.service.IPessoaService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.cache.annotation.Cacheable;
+import org.springframework.cache.annotation.*;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -14,6 +14,7 @@ import org.springframework.stereotype.Service;
 import java.util.Optional;
 
 @Service
+@CacheConfig(cacheNames = "personsCache")
 public class PessoaServiceImp implements IPessoaService {
 
     private final PessoaRepository pessoaRepository;
@@ -24,12 +25,13 @@ public class PessoaServiceImp implements IPessoaService {
     }
 
     @Override
-    @Cacheable("findAllPersons")
+    @Cacheable(cacheNames = "findAllPersonsCache")
     public Page<Pessoa> findAll(Pageable pageable) {
         return this.pessoaRepository.findAll(pageable);
     }
 
     @Override
+    @Cacheable(cacheNames = "findPersonByIdCache")
     public Optional<Pessoa> findById(Integer id) {
         if (id != null) {
             return this.pessoaRepository.findById(id);
@@ -39,6 +41,10 @@ public class PessoaServiceImp implements IPessoaService {
     }
 
     @Override
+    @Caching(evict = {
+            @CacheEvict(cacheNames = "findAllPersonsCache", allEntries = true),
+            @CacheEvict(cacheNames = "findPersonByIdCache", allEntries = true)
+    })
     public void delete(Integer id) {
         if (id != null) {
             this.pessoaRepository.findById(id).ifPresent(pessoa -> {
@@ -53,6 +59,10 @@ public class PessoaServiceImp implements IPessoaService {
     }
 
     @Override
+    @Caching(evict = {
+        @CacheEvict(cacheNames = "findAllPersonsCache", allEntries = true),
+        @CacheEvict(cacheNames = "findPersonByIdCache", allEntries = true)
+    })
     public Pessoa save(Pessoa pessoa) {
         if (pessoa != null) {
             return this.pessoaRepository.save(pessoa);
@@ -62,6 +72,10 @@ public class PessoaServiceImp implements IPessoaService {
     }
 
     @Override
+    @Caching(evict = {
+            @CacheEvict(cacheNames = "findAllPersonsCache", allEntries = true),
+            @CacheEvict(cacheNames = "findPersonByIdCache", allEntries = true)
+    })
     public Pessoa update(Integer id, Pessoa pessoa) {
         Optional<Pessoa> optional;
         if (pessoa != null && id != null) {

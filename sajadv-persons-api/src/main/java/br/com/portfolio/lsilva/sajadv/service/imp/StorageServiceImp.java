@@ -5,6 +5,7 @@ import br.com.portfolio.lsilva.sajadv.exception.BadRequestExcepion;
 import br.com.portfolio.lsilva.sajadv.service.IStorageService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.cache.annotation.CachePut;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -49,6 +50,7 @@ public class StorageServiceImp implements IStorageService {
     }
 
     @Override
+    @CachePut(cacheNames = "persons")
     public String saveFile(MultipartFile file, Integer id) {
         verifyDirCreated();
         String urlFile = "";

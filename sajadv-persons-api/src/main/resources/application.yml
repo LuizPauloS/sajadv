@@ -20,6 +20,10 @@ spring:
     url: jdbc:postgresql://localhost:5432/sajadv
     username: postgres
     password: s4j@dv2020
+  cloud:
+    loadbalancer:
+      ribbon:
+        enabled: false
 
 eureka:
   instance:
