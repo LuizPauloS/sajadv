@@ -36,10 +36,10 @@ public class StorageServiceImp implements IStorageService {
     public byte[] readFile(Integer id) {
         verifyDirCreated();
         String url;
-        Optional<Pessoa> optional = pessoaServiceImp.findById(id);
+        Pessoa pessoa = pessoaServiceImp.findById(id);
         try {
-            if (optional.isPresent()) {
-                url = optional.get().getArquivo();
+            if (pessoa != null) {
+                url = pessoa.getArquivo();
                 return Files.readAllBytes(path.resolve(url));
             }
         } catch (IOException e) {
@@ -54,12 +54,12 @@ public class StorageServiceImp implements IStorageService {
     public String saveFile(MultipartFile file, Integer id) {
         verifyDirCreated();
         String urlFile = "";
-        Optional<Pessoa> optional = pessoaServiceImp.findById(id);
+        Pessoa pessoa = pessoaServiceImp.findById(id);
         try {
-            if (optional.isPresent()) {
-                deleteImageExisting(optional.get());
-                urlFile = addImageDir(file, optional.get());
-                pessoaServiceImp.save(optional.get());
+            if (pessoa != null) {
+                deleteImageExisting(pessoa);
+                urlFile = addImageDir(file, pessoa);
+                pessoaServiceImp.save(pessoa);
             }
         } catch (Exception e) {
             e.printStackTrace();

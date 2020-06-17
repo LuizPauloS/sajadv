@@ -15,5 +15,5 @@ public interface IBaseService<T> {
 
     Page<T> findAll(Pageable pageable);
 
-    Optional<T> findById(Integer id);
+    T findById(Integer id);
 }

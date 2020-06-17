@@ -2,6 +2,7 @@ package br.com.portfolio.lsilva.sajadv.service.imp;
 
 import br.com.portfolio.lsilva.sajadv.entity.Pessoa;
 import br.com.portfolio.lsilva.sajadv.exception.BadRequestExcepion;
+import br.com.portfolio.lsilva.sajadv.exception.NotFoundException;
 import br.com.portfolio.lsilva.sajadv.exception.NotModifiedException;
 import br.com.portfolio.lsilva.sajadv.repository.PessoaRepository;
 import br.com.portfolio.lsilva.sajadv.service.IPessoaService;
@@ -32,9 +33,10 @@ public class PessoaServiceImp implements IPessoaService {
 
     @Override
     @Cacheable(cacheNames = "findPersonByIdCache")
-    public Optional<Pessoa> findById(Integer id) {
+    public Pessoa findById(Integer id) {
         if (id != null) {
-            return this.pessoaRepository.findById(id);
+            return this.pessoaRepository.findByIdAndAndAtivoTrue(id)
+                    .orElseThrow(() -> new NotFoundException("Pessoa não encontrada"));
         }
         throw new BadRequestExcepion("Ocorreu um erro ao buscar o cadastro de pessoa pelo id. " +
                 "Verifique os dados e tente novamente.");

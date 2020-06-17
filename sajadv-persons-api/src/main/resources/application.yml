@@ -38,6 +38,11 @@ storage:
   local:
     images: /home/luiz/Documentos/uploads/images/
 
+logging:
+  level:
+    org:
+      springframework:
+        cache: TRACE
 ---
 
 spring:

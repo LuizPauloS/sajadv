@@ -110,14 +110,14 @@ public class PessoaServiceTest {
     public void deveBuscarPessoaCadastradaPorId() {
         final int id = 1;
 
-        when(this.pessoaRepository.findById(id)).thenReturn(Optional.of(pessoa));
+        when(this.pessoaRepository.findById(id)).thenReturn(Optional.ofNullable(pessoa));
 
-        Optional<Pessoa> optionalPessoa = this.pessoaServiceImp.findById(id);
+       Pessoa optionalPessoa = this.pessoaServiceImp.findById(id);
 
-        assertTrue(optionalPessoa.isPresent());
-        assertEquals(optionalPessoa.get().getId(), pessoa.getId());
-        assertEquals(optionalPessoa.get().getCpf(), pessoa.getCpf());
-        assertEquals(optionalPessoa.get().getEmail(), pessoa.getEmail());
+        assertNotNull(optionalPessoa);
+        assertEquals(optionalPessoa.getId(), pessoa.getId());
+        assertEquals(optionalPessoa.getCpf(), pessoa.getCpf());
+        assertEquals(optionalPessoa.getEmail(), pessoa.getEmail());
     }
 
     @Test
@@ -126,9 +126,9 @@ public class PessoaServiceTest {
 
         when(this.pessoaRepository.findById(id)).thenReturn(Optional.empty());
 
-        Optional<Pessoa> optionalPessoa = this.pessoaServiceImp.findById(id);
+        Pessoa optionalPessoa = this.pessoaServiceImp.findById(id);
 
-        assertFalse(optionalPessoa.isPresent());
+        assertNull(optionalPessoa);
     }
 
     @Test(expected = BadRequestExcepion.class)
