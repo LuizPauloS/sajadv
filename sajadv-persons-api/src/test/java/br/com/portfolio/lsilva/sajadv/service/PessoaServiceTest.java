@@ -2,6 +2,7 @@ package br.com.portfolio.lsilva.sajadv.service;
 
 import br.com.portfolio.lsilva.sajadv.entity.Pessoa;
 import br.com.portfolio.lsilva.sajadv.exception.BadRequestExcepion;
+import br.com.portfolio.lsilva.sajadv.exception.NotFoundException;
 import br.com.portfolio.lsilva.sajadv.repository.PessoaRepository;
 import br.com.portfolio.lsilva.sajadv.service.imp.PessoaServiceImp;
 import org.junit.Before;
@@ -120,15 +121,13 @@ public class PessoaServiceTest {
         assertEquals(optionalPessoa.getEmail(), pessoa.getEmail());
     }
 
-    @Test
+    @Test(expected = NotFoundException.class)
     public void naoDeveBuscarPessoaCadastradaIdNaoEncontrado() {
         final int id = 3;
 
         when(this.pessoaRepository.findById(id)).thenReturn(Optional.empty());
 
         Pessoa optionalPessoa = this.pessoaServiceImp.findById(id);
-
-        assertNull(optionalPessoa);
     }
 
     @Test(expected = BadRequestExcepion.class)

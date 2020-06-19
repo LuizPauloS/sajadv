@@ -35,7 +35,7 @@ public class PessoaServiceImp implements IPessoaService {
     @Cacheable(cacheNames = "findPersonByIdCache")
     public Pessoa findById(Integer id) {
         if (id != null) {
-            return this.pessoaRepository.findByIdAndAndAtivoTrue(id)
+            return this.pessoaRepository.findById(id)
                     .orElseThrow(() -> new NotFoundException("Pessoa não encontrada"));
         }
         throw new BadRequestExcepion("Ocorreu um erro ao buscar o cadastro de pessoa pelo id. " +
@@ -43,10 +43,9 @@ public class PessoaServiceImp implements IPessoaService {
     }
 
     @Override
-    @Caching(evict = {
-            @CacheEvict(cacheNames = "findAllPersonsCache", allEntries = true),
-            @CacheEvict(cacheNames = "findPersonByIdCache", allEntries = true)
-    })
+    @Caching(put = @CachePut("findPersonByIdCache"),
+             evict = @CacheEvict(cacheNames = "findAllPersonsCache", allEntries = true)
+    )
     public void delete(Integer id) {
         if (id != null) {
             this.pessoaRepository.findById(id).ifPresent(pessoa -> {
@@ -61,10 +60,9 @@ public class PessoaServiceImp implements IPessoaService {
     }
 
     @Override
-    @Caching(evict = {
-        @CacheEvict(cacheNames = "findAllPersonsCache", allEntries = true),
-        @CacheEvict(cacheNames = "findPersonByIdCache", allEntries = true)
-    })
+    @Caching(put = @CachePut("findPersonByIdCache"),
+             evict = @CacheEvict(cacheNames = "findAllPersonsCache", allEntries = true)
+    )
     public Pessoa save(Pessoa pessoa) {
         if (pessoa != null) {
             return this.pessoaRepository.save(pessoa);
@@ -74,10 +72,9 @@ public class PessoaServiceImp implements IPessoaService {
     }
 
     @Override
-    @Caching(evict = {
-            @CacheEvict(cacheNames = "findAllPersonsCache", allEntries = true),
-            @CacheEvict(cacheNames = "findPersonByIdCache", allEntries = true)
-    })
+    @Caching(put = @CachePut("findPersonByIdCache"),
+             evict = @CacheEvict(cacheNames = "findAllPersonsCache", allEntries = true)
+    )
     public Pessoa update(Integer id, Pessoa pessoa) {
         Optional<Pessoa> optional;
         if (pessoa != null && id != null) {
