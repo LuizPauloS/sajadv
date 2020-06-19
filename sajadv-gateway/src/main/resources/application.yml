@@ -1,0 +1,33 @@
+server:
+  port: 8762
+
+spring:
+  profiles:
+    active: default
+
+eureka:
+  client:
+    serviceUrl:
+      defaultZone: http://localhost:8761/eureka/
+    fetch-registry: true
+    register-with-eureka: true
+
+zuul:
+  prefix: /api
+  ignored-services: '*'
+  routes:
+    pessoas:
+      path: /**
+      serviceId: sajadv-persons-api
+      strip-prefix: false
+  sensitive-headers: Cookie
+
+---
+
+spring:
+  profiles: production
+
+eureka:
+  client:
+    serviceUrl:
+      defaultZone: http://eureka:8761/eureka/

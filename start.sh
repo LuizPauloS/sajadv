@@ -7,5 +7,6 @@ not installed, for more details, visit https://docs.docker.com/install/.  Aborti
 echo "****************BUILDING ARTIFACTS********************************************************"
 sh sajadv-build/build.sh
 echo "****************STARTING DOCKER CONTAINERS************************************************"
-docker-compose up
+docker-compose up -d
 echo "****************PROCESS FINISH ***********************************************************"
+echo http://localhost:4200/

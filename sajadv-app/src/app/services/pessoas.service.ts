@@ -1,3 +1,4 @@
+import { httpOptions } from './../shared/configuration/config';
 import { Observable } from 'rxjs';
 import { Injectable } from '@angular/core';
 
@@ -12,7 +13,7 @@ export class PessoasService implements IBaseServices<Pessoa> {
   constructor(private httpClient: HttpClient) { }
 
   findAll(): Observable<any> {
-    return this.httpClient.get<any>(environment.pessoas.findAll);
+    return this.httpClient.get<any>(environment.pessoas.findAll, httpOptions);
   }
 
   findById(id: number): Observable<Pessoa> {

@@ -1,0 +1,58 @@
+server:
+  servlet:
+    context-path: /sajadv-persons-api/v1
+
+spring:
+  profiles:
+    active: default
+  jpa:
+    hibernate.ddl-auto: update
+    show-sql: true
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+        show_sql: true
+        use_sql_comments: true
+        format_sql: true
+        type: trace
+  datasource:
+    driver-class-name: org.postgresql.Driver
+    url: jdbc:postgresql://localhost:5432/sajadv
+    username: postgres
+    password: s4j@dv2020
+  cloud:
+    loadbalancer:
+      ribbon:
+        enabled: false
+
+eureka:
+  instance:
+    prefer-ip-address: true
+  client:
+    serviceUrl:
+      defaultZone: http://localhost:8761/eureka/
+    registerWithEureka: true
+    fetchRegistry: true
+
+storage:
+  local:
+    images: /home/luiz/Documentos/uploads/images/
+
+logging:
+  level:
+    org:
+      springframework:
+        cache: TRACE
+---
+
+spring:
+  profiles: production
+  datasource:
+    url: jdbc:postgresql://sajadv-db:5432/sajadv
+    username: postgres
+    password: s4j@dv2020
+
+eureka:
+ client:
+   serviceUrl:
+     defaultZone: http://eureka:8761/eureka/

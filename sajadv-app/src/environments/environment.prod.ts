@@ -1,4 +1,4 @@
-const api = 'http://localhost:8080/sajadv-service/v1';
+const api = '//localhost:8762/api/sajadv-service/v1';
 
 export const environment = {
   production: true,
