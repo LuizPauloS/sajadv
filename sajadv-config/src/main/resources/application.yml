@@ -6,5 +6,6 @@ spring:
     config:
       server:
         git:
-          uri: https://github.com/LuizPauloS/sajadv/tree/dev/sajadv-config
+          uri: https://github.com/LuizPauloS/sajadv/sajadv-config
+          #uri: file://home/luiz/Documentos/Projetos/java/desafios/sajadv/sajadv-config/src/main/resources/
           #clone-on-start: true
