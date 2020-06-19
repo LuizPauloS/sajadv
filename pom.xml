@@ -25,6 +25,7 @@
         <module>sajadv-discovery</module>
         <module>sajadv-persons-api</module>
         <module>sajadv-entity</module>
+        <module>sajadv-config</module>
     </modules>
 
     <dependencies>
