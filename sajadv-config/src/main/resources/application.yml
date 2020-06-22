@@ -7,3 +7,4 @@ spring:
       server:
         git:
           uri: https://github.com/LuizPauloS/sajadv-configs
+          password: 55caadd2cdadcd188f86b87250789af379a77142
