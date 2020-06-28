@@ -20,7 +20,7 @@ zuul:
       path: /**
       serviceId: sajadv-persons-api
       strip-prefix: false
-  sensitive-headers: Cookie
+  sensitive-headers: Set-Cookie,Authorization
 
 ---
 
